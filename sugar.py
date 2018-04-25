@@ -14,10 +14,10 @@ def const(values):
     return (Constant(v) for v in values)
 
 
-def param(values, lr):
+def param(values, floating=True):
     if not isinstance(values, Iterable):
-        return Parameter(values, lr)
-    return (Parameter(v, lr) for v in values)
+        return Parameter(values, floating)
+    return (Parameter(v, floating) for v in values)
 
 
 def mul(u0, u1):
