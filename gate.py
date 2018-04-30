@@ -8,10 +8,13 @@ class Gate(object):
     based on them (forward pass), and propagate gradients (backward pass).
     """
 
-    def __init__(self, input_gates):
+    def __init__(self, mnemonic, input_gates):
+        self.name = mnemonic
         self.igs = input_gates
-        self.val = None
-        self.grad = 1
+        self.val = self.grad = 0.0
+
+    def __repr__(self):
+        return '{}[{:.5}, {:.5}]'.format(self.name, self.val, self.grad)
 
     def forward(self):
         raise NotImplementedError()
@@ -37,13 +40,14 @@ class Gate(object):
             gate.forward()
         return self.val
 
-    def backprop(self, lr=0):
+    def backprop(self, lr=0.0, grad=1.0):
         """
         Recursively propagates the gradient throughout the gate dependencies.
         By default, it does not update floating network parameters. Use a learning rate > 0 to apply gradients to them.
         Don't use this on hidden (intermediate) nodes (why? because gradient contributions coming from gates
         we do not depend on will be otherwise lost).
         """
+        self.grad = float(grad)
         dependencies = self.dependencies()
         for gate in dependencies:
             gate.grad = 0  # reset accumulators for gradients
@@ -58,12 +62,6 @@ class Gate(object):
         if not lr == 0:
             for param in self.parameters():
                 param.val += lr * param.grad
-
-    def train(self, lr, passes=1):
-        for _ in range(passes):
-            self.compute()
-            self.backprop(lr)
-        self.compute()
 
     def checkpoint(self):
         return [gate.val for gate in self.parameters()]

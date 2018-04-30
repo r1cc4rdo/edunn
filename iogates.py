@@ -4,9 +4,9 @@ from gate import Gate
 class Parameter(Gate):
 
     def __init__(self, value, floating=True):
-        super(Parameter, self).__init__([])
+        super(Parameter, self).__init__('par' if floating else 'const', [])
         self.floating = floating
-        self.val = value
+        self.val = float(value)
 
     def forward(self):
         pass

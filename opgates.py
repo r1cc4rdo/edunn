@@ -5,7 +5,7 @@ from gate import Gate
 class MulGate(Gate):
 
     def __init__(self, u0, u1):
-        super(MulGate, self).__init__([u0, u1])
+        super(MulGate, self).__init__('*', [u0, u1])
 
     def forward(self):
         self.val = self.igs[0].val * self.igs[1].val
@@ -18,7 +18,7 @@ class MulGate(Gate):
 class AddGate(Gate):
 
     def __init__(self, u0, u1):
-        super(AddGate, self).__init__([u0, u1])
+        super(AddGate, self).__init__('+', [u0, u1])
 
     def forward(self):
         self.val = self.igs[0].val + self.igs[1].val
@@ -31,7 +31,7 @@ class AddGate(Gate):
 class DivGate(Gate):
 
     def __init__(self, u0, u1):
-        super(DivGate, self).__init__([u0, u1])
+        super(DivGate, self).__init__('/', [u0, u1])
 
     def forward(self):
         self.val = self.igs[0].val / self.igs[1].val
@@ -44,7 +44,7 @@ class DivGate(Gate):
 class SigmoidGate(Gate):
 
     def __init__(self, u0):
-        super(SigmoidGate, self).__init__([u0])
+        super(SigmoidGate, self).__init__('sig', [u0])
 
     @staticmethod
     def sigmoid(x):
@@ -56,15 +56,3 @@ class SigmoidGate(Gate):
     def backward(self):
         s = self.sigmoid(self.igs[0].val)
         self.igs[0].grad += (s * (1 - s)) * self.grad
-
-
-class ReluGate(Gate):
-
-    def __init__(self, u0):
-        super(ReluGate, self).__init__([u0])
-
-    def forward(self):
-        self.val = 0 if self.igs[0].val < 0 else self.igs[0].val
-
-    def backward(self):
-        self.igs[0].grad += 0 if self.igs[0].val < 0 else self.grad
