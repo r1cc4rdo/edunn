@@ -1,0 +1,55 @@
+from random import choice
+from sugar import *
+
+dataset = (((1.2, 0.7), +1.0), ((-0.3, 0.5), -1.0), ((-3.0, -1.0), +1.0),
+           ((0.1, 1.0), -1.0), ((3.0, 1.1), -1.0), ((2.1, -3.0), +1.0))
+
+a, b, c = param((1, -2, -1))  # initial solution
+x, y, label = const((0, 0, 0))  # const not affected by update_parameters()
+f = minimum(1, label * (a * x + b * y + c))
+
+
+def evaluate_training_accuracy():
+    total_correct = 0
+    for training_example in dataset:
+        (x.val, y.val), label.val = training_example
+        total_correct += f.compute() > 0
+    return float(total_correct) / len(dataset)
+
+
+for iteration in range(35001):
+
+    (x.val, y.val), label.val = choice(dataset)
+
+    if iteration % 2500 == 0 or (iteration % 10 == 0 and iteration < 40):
+        print 'Accuracy at iteration {}: {:.1f} [{:.2f} {:.2f} {:.2f}]'.format(
+            iteration, 100 * evaluate_training_accuracy(), a.val, b.val, c.val)
+
+    f.compute()
+    f.backprop()
+
+    # a.grad += -a.val
+    # b.grad += -b.val
+
+    f.update_parameters(0.1)
+
+"""
+Accuracy at iteration 0: 66.7 [1.00 -2.00 -1.00]        << initial sol 4/6
+Accuracy at iteration 10: 66.7 [0.52 -2.14 -0.90]
+Accuracy at iteration 20: 83.3 [-0.08 -2.34 -0.70]      << 5/6 by iteration 20
+Accuracy at iteration 30: 83.3 [0.28 -2.13 -0.40]
+Accuracy at iteration 2500: 83.3 [0.72 -5.28 1.70]
+Accuracy at iteration 5000: 83.3 [1.05 -7.45 3.20]
+Accuracy at iteration 7500: 83.3 [1.77 -9.57 4.40]
+Accuracy at iteration 10000: 83.3 [1.80 -11.77 5.80]
+Accuracy at iteration 12500: 83.3 [3.06 -13.85 7.00]
+Accuracy at iteration 15000: 83.3 [2.88 -16.39 8.00]
+Accuracy at iteration 17500: 100.0 [3.27 -18.57 9.20]   << 6/6 after ~15000 iterations
+Accuracy at iteration 20000: 100.0 [3.75 -20.62 10.50]
+Accuracy at iteration 22500: 100.0 [4.08 -22.59 11.60]
+Accuracy at iteration 25000: 100.0 [4.38 -24.56 12.50]
+Accuracy at iteration 27500: 100.0 [4.53 -26.34 13.70]
+Accuracy at iteration 30000: 100.0 [5.01 -27.78 14.50]
+Accuracy at iteration 32500: 100.0 [5.13 -28.19 14.60]  << margin requirement satisfied, gradient 0
+Accuracy at iteration 35000: 100.0 [5.13 -28.19 14.60]
+"""

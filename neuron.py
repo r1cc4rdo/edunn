@@ -5,7 +5,7 @@ from opgates import SigmoidGate
 class NeuronGate(Gate):
 
     def __init__(self, a, b, c, x, y):
-        super(NeuronGate, self).__init__([a, b, c, x, y])
+        super(NeuronGate, self).__init__('neuron', [a, b, c, x, y])
 
     def forward(self):
         a, b, c, x, y = (in_node.val for in_node in self.igs)
