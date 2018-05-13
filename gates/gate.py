@@ -11,10 +11,14 @@ class Gate(object):
     def __init__(self, mnemonic, input_gates):
         self.name = mnemonic
         self.igs = input_gates
-        self.val = self.grad = 0.0
+        self.val = self.grad = 0
 
     def __repr__(self):
         return '{}[{:.5}, {:.5}]'.format(self.name, self.val, self.grad)
+
+    def __setattr__(self, name, value):
+        value = float(value) if name in ('val', 'grad') else value  # ensure value and gradient are floats
+        super(Gate, self).__setattr__(name, value)
 
     def forward(self):
         raise NotImplementedError()
@@ -33,35 +37,34 @@ class Gate(object):
 
     def compute(self):
         """
-        Recursively computes the gate value (i.e. also updates all gates the current depends on).
+        Recursively computes the gate value (i.e. updates all gates the current depends on).
+        Also resets accumulators for gradients used in the backward pass.
         :return: the gate output value
         """
         for gate in self.dependencies() + [self]:
             gate.forward()
+            gate.grad = 0  # reset accumulators for gradients
         return self.val
 
-    def backprop(self, lr=0.0, grad=1.0):
+    def backprop(self, lr=0, grad=1):
         """
         Recursively propagates the gradient throughout the gate dependencies.
         By default, it does not update floating network parameters. Use a learning rate > 0 to apply gradients to them.
         Don't use this on hidden (intermediate) nodes (why? because gradient contributions coming from gates
         we do not depend on will be otherwise lost).
         """
-        self.grad = float(grad)
-        dependencies = self.dependencies()
-        for gate in dependencies:
-            gate.grad = 0  # reset accumulators for gradients
-        for gate in reversed(dependencies + [self]):
+        self.grad = grad
+        for gate in reversed(self.dependencies() + [self]):
             gate.backward()
         self.update_parameters(lr)
 
     def parameters(self):
-        return [gate for gate in self.dependencies() if not gate.igs and gate.floating]
+        return [gate for gate in self.dependencies() + [self] if not gate.igs and gate.floating]
 
     def update_parameters(self, lr):
         if not lr == 0:
             for param in self.parameters():
-                param.val += lr * param.grad
+                param.val += float(lr) * param.grad
 
     def checkpoint(self):
         return [gate.val for gate in self.parameters()]

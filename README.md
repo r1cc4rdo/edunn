@@ -6,41 +6,23 @@ This implementation is not a one-to-one translation of the original javascript c
 
 The main purpose of this version is to simplify network definition and automate the computation of forward and backward passes. Both these tasks are exploded and manual (for clarity's sake!) in Karpathy's blog post.
 
-For example, a single neuron can be written as:
+For example, the linear classifier example can be written as:
 
 ```python
-a, b, c = param([1.0, 2.0, -3.0])
-x, y = const([-1.0, 3.0])
+from random import choice
+from sugar import *
 
-s = sigmoid(a * x + b * y + c)
-print s.compute()  # 0.880797077978
-```
+dataset = (((1.2, 0.7), +1.0), ((-0.3, 0.5), -1.0), ((-3.0, -1.0), +1.0),
+           ((0.1, 1.0), -1.0), ((3.0, 1.1), -1.0), ((2.1, -3.0), +1.0))
 
-Compare it with the original implementation:
+a, b, c = param((1, -2, -1))  # parameters to optimize
+x, y, label = const((0, 0, 0))  # training inputs
+f = minimum(1, label * (a * x + b * y + c))
 
-```javascript
-var a = new Unit(1.0, 0.0);
-var b = new Unit(2.0, 0.0);
-var c = new Unit(-3.0, 0.0);
-var x = new Unit(-1.0, 0.0);
-var y = new Unit(3.0, 0.0);
+for iteration in range(35000):
+    (x.val, y.val), label.val = choice(dataset)
+    f.compute()  # forward pass
+    f.backprop(0.1)  # backward pass
 
-// create the gates
-var mulg0 = new multiplyGate();
-var mulg1 = new multiplyGate();
-var addg0 = new addGate();
-var addg1 = new addGate();
-var sg0 = new sigmoidGate();
-
-// do the forward pass
-var forwardNeuron = function() {
-  ax = mulg0.forward(a, x); // a*x = -1
-  by = mulg1.forward(b, y); // b*y = 6
-  axpby = addg0.forward(ax, by); // a*x + b*y = 5
-  axpbypc = addg1.forward(axpby, c); // a*x + b*y + c = 2
-  s = sg0.forward(axpbypc); // sig(a*x + b*y + c) = 0.8808
-};
-forwardNeuron();
-
-console.log('circuit output: ' + s.value); // prints 0.8808
+print 'a, b, c = {:.2f}, {:.2f}, {:.2f}'.format(a.val, b.val, c.val)
 ```

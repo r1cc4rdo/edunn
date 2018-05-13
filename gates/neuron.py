@@ -1,5 +1,5 @@
 from gate import Gate
-from opgates import SigmoidGate
+from arity1 import SigmoidGate
 
 
 class NeuronGate(Gate):
@@ -19,3 +19,9 @@ class NeuronGate(Gate):
         b.grad += partial_grad * y.val
         y.grad += partial_grad * b.val
         c.grad += partial_grad
+
+
+if __name__ == '__main__':
+
+    import doctest
+    doctest.testmod(verbose=True)
