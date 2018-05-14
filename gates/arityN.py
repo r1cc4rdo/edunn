@@ -58,7 +58,7 @@ class NormGate(Gate):
     >>> from utils.sugar import *
     >>> from utils.numerical import isclose
     >>> a, b, c = param(1, 1, 1)
-    >>> isclose((x.compute() for x in (NormGate(a), norm(a, b), norm(a, b, c))), (1.0, math.sqrt(2), math.sqrt(3)))
+    >>> isclose((x.compute() for x in (NormGate(a), norm(a), norm(a, b), norm(a, b, c))), (1.0, 1.0, 2**0.5, 3**0.5))
     True
 
     >>> a.val, b.val, c.val = 3, 4, 12
@@ -85,8 +85,8 @@ class MinGate(Gate):
     """
     >>> from utils.sugar import *
     >>> a, b, c = param(1, -2, 3)
-    >>> tuple(x.compute() for x in (MinGate(a), minimum(a, b), minimum(a, b, c)))
-    (1.0, -2.0, -2.0)
+    >>> tuple(x.compute() for x in (MinGate(a), minimum(a), minimum(a, b), minimum(a, b, c)))
+    (1.0, 1.0, -2.0, -2.0)
 
     >>> min_abc = minimum(a, b, c)
     >>> _ = min_abc.compute()
@@ -111,8 +111,8 @@ class MaxGate(MinGate):
     """
     >>> from utils.sugar import *
     >>> a, b, c = param(1, -2, 3)
-    >>> tuple(x.compute() for x in (MaxGate(a), maximum(a, b), maximum(a, b, c)))
-    (1.0, 1.0, 3.0)
+    >>> tuple(x.compute() for x in (MaxGate(a), maximum(a), maximum(a, b), maximum(a, b, c)))
+    (1.0, 1.0, 1.0, 3.0)
 
     >>> max_abc = maximum(a, b, c)
     >>> _ = max_abc.compute()
