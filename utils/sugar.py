@@ -1,22 +1,15 @@
 """
 Syntactic sugar for using gates.
 """
-from collections import Iterable
-
 from gates import *
-from gates.neuron import NeuronGate
 
 
-def const(values=0):
-    if not isinstance(values, Iterable):
-        return Constant(values)
-    return (Constant(v) for v in values)
+def const(value=0, *argv):
+    return Constant(value) if not argv else (Constant(v) for v in (value,) + argv)
 
 
-def param(values=0, floating=True):
-    if not isinstance(values, Iterable):
-        return Parameter(values, floating)
-    return (Parameter(v, floating) for v in values)
+def param(value=0, *argv):
+    return Parameter(value) if not argv else (Parameter(v) for v in (value,) + argv)
 
 
 def _g(gate_or_value):  # upgrade scalar to Constant gate, or return unchanged
@@ -50,15 +43,21 @@ def neuron(a, b, c, x, y):
 Gate.__add__ = lambda self, other: AddGate(_g(self), _g(other))
 Gate.__mul__ = lambda self, other: MulGate(_g(self), _g(other))
 Gate.__pow__ = lambda self, other: PowGate(_g(self), _g(other))
+Gate.__rpow__ = lambda self, other: PowGate(_g(other), _g(self))
 
 """ below this line, derived gates and operators """
 
+Gate.__radd__ = Gate.__add__
+Gate.__rmul__ = Gate.__mul__
 Gate.__pos__ = lambda self: _g(self)
 Gate.__neg__ = lambda self: _g(self) * _g(-1)
 Gate.__sub__ = lambda self, other: _g(self) + _g(other) * _g(-1)
+Gate.__rsub__ = lambda self, other: _g(other) + _g(self) * _g(-1)
 Gate.__div__ = lambda self, other: _g(self) * (_g(other) ** _g(-1))
+Gate.__rdiv__ = lambda self, other: _g(other) * (_g(self) ** _g(-1))
 Gate.__truediv__ = Gate.__div__
+Gate.__rtruediv__ = Gate.__rdiv__
 
 
 def sqrt(u0):
-    return PowGate(_g(u0), _g(-1))
+    return PowGate(_g(u0), _g(0.5))

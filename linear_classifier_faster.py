@@ -1,53 +1,7 @@
-from random import choice
-from sugar import *
-
-dataset = (((1.2, 0.7), +1.0), ((-0.3, 0.5), -1.0), ((-3.0, -1.0), +1.0),
-           ((0.1, 1.0), -1.0), ((3.0, 1.1), -1.0), ((2.1, -3.0), +1.0))
-
-m = param(1)
-a, b, c = param((1, -2, -1))  # initial solution
-x, y, label = const((0, 0, 0))  # not affected by backprop
-f = minimum(1, label * m * (a * x + b * y + c))
-n = sqrt(a * a + b * b + c * c)
-
-test norm
-
-start_lr = 0.5
-final_lr = 0.01
-max_iter = 4001
-pga = pgb = pgc = pgm = 0
-for iteration in range(max_iter):
-
-    lr = start_lr - (start_lr - final_lr) * iteration / float(max_iter)
-    if iteration % 100 == 0 or (iteration % 10 == 0 and iteration < 40):
-        correct = sum(f.compute() > 0 for (x.val, y.val), label.val in dataset)
-        print 'Accuracy at iteration {}: {:.1f} [{:.2f} {:.2f} {:.2f} * {:.2f} lr {:.4f}]'.format(
-            iteration, (100.0 * correct) / len(dataset), a.val, b.val, c.val, m.val, lr)
-
-    (x.val, y.val), label.val = choice(dataset)
-    f.compute()
-    f.backprop(lr)
-
-    # aga = agb = agc = agm = 0
-    # for (x.val, y.val), label.val in dataset:
-    #
-    #     f.compute()
-    #     f.backprop(lr)
-
-    #     aga += a.grad
-    #     agb += b.grad
-    #     agc += c.grad
-    #     agm += m.grad
-    #
-    # a.grad = (aga + pga) / (2 * len(dataset))
-    # b.grad = (agb + pgb) / (2 * len(dataset))
-    # c.grad = (agc + pgc) / (2 * len(dataset))
-    # m.grad = (agm + pgm) / (2 * len(dataset))
-    # pga, pgb, pgc, pgm = aga, agb, agc, agm
-    #
-    # f.update_parameters(lr)
-
 """
+Faster convergence by adding a global multiplier.
+Annotated output:
+
 Accuracy at iteration 0: 66.7 [1.00 -2.00 -1.00 1.00]       << initial sol 4/6
 Accuracy at iteration 10: 66.7 [0.50 -2.15 -0.91 0.70]
 Accuracy at iteration 20: 66.7 [0.43 -2.16 -0.89 0.66]
@@ -77,19 +31,23 @@ Accuracy at iteration 11000: 100.0 [2.43 -13.41 6.95 2.16]  << 6/6 after ~11000 
 Accuracy at iteration 11500: 100.0 [2.43 -13.41 6.95 2.16]  << margin requirement already satisfied, gradient 0
 Accuracy at iteration 12000: 100.0 [2.43 -13.41 6.95 2.16]
 """
+from random import choice
+from utils.sugar import *
 
-# from random import choice
-# from sugar import *
-#
-# dataset = (((1.2, 0.7), +1.0), ((-0.3, 0.5), -1.0), ((-3.0, -1.0), +1.0),
-#            ((0.1, 1.0), -1.0), ((3.0, 1.1), -1.0), ((2.1, -3.0), +1.0))
-#
-# a, b, c = param((1, -2, -1))  # parameters to optimize
-# x, y, label = const((0, 0, 0))  # training inputs
-# f = minimum(1, label * (a * x + b * y + c))
-#
-# for iteration in range(35000):
-#     (x.val, y.val), label.val = choice(dataset)
-#     f.compute()  # forward pass
-#     f.backprop(0.1)  # backward pass
-#     print 'a, b, c = {:.2f}, {:.2f}, {:.2f}'.format(a.val, b.val, c.val)
+dataset = (((1.2, 0.7), +1.0), ((-0.3, 0.5), -1.0), ((-3.0, -1.0), +1.0),
+           ((0.1, 1.0), -1.0), ((3.0, 1.1), -1.0), ((2.1, -3.0), +1.0))
+
+a, b, c, m = param(1, -2, -1, 1)  # initial solution
+x, y, label = const(0, 0, 0)  # not affected by backprop
+f = minimum(1, label * m * (a * x + b * y + c))
+
+for iteration in range(30000):
+
+    if iteration % 500 == 0 or (iteration % 10 == 0 and iteration < 40):
+        correct = sum(f.compute() > 0 for (x.val, y.val), label.val in dataset)
+        print 'Accuracy at iteration {}: {:.1f} [{:.2f} {:.2f} {:.2f} * {:.2f}]'.format(
+            iteration, (100.0 * correct) / len(dataset), a.val, b.val, c.val, m.val)
+
+    (x.val, y.val), label.val = choice(dataset)
+    f.compute()
+    f.backprop(0.1)

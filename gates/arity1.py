@@ -6,8 +6,9 @@ class SigmoidGate(Gate):
     """
     Sigmoids are a class of S-shaped, monotonic, saturating non-linearities.
     One example is the logistic function, defined as: $$S(x) = \frac{1}{1 + e^{-x}} = \frac{e^x}{e^x + 1}$$
+    For $x = 0$, $s(x) = \frac{1}{2}$ and $\frac{ds}{dx} = \frac{1}{4}$.
 
-    >>> from sugar import *
+    >>> from utils.sugar import *
     >>> x = param(0)
     >>> s = sigmoid(x)
     >>> s.compute()
@@ -24,7 +25,7 @@ class SigmoidGate(Gate):
     ds = @(x) exp(x) ./ (exp(x) + 1).^2; % ds/dx
     s(samples), ds(samples)
 
-    >>> from test import isclose
+    >>> from utils.numerical import isclose
     >>> from operator import add
     >>> gt = ((0.268941421369995, 0.196611933241482), (0.500000000000000, 0.250000000000000),
     ...       (0.731058578630005, 0.196611933241482), (0.880797077977882, 0.104993585403507),
@@ -50,9 +51,10 @@ class SigmoidGate(Gate):
 class ReluGate(Gate):
     """
     A (Re)ctified (L)inear (U)nit.
-    Behaves like $f(x) = x$ if $x \leq 0$, $x = 0$ otherwise.
+    Behaves like $f(x) = x$ if $x \geq 0$, $x = 0$ otherwise.
+    Let's compute the value and gradient of relu(x) for x in -2..2:
 
-    >>> from sugar import *
+    >>> from utils.sugar import *
     >>> x = param()
     >>> r = relu(x)
     >>> [(v, d) for v, n, d in [(r.compute(), r.backprop(grad=0.1), x.grad) for x.val in range(-2, 3)]]
