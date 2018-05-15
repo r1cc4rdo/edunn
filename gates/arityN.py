@@ -7,8 +7,8 @@ class AddGate(Gate):
     """
     >>> from utils.sugar import *
     >>> a, b, c = param(1, -2, 3)
-    >>> tuple(x.compute() for x in (AddGate(a), a + b, a + b + c))
-    (1.0, -1.0, 2.0)
+    >>> tuple(x.compute() for x in (AddGate(a), a + b, summation(a, b), a + b + c, summation(a, b, c)))
+    (1.0, -1.0, -1.0, 2.0, 2.0)
 
     >>> s = a + b + c
     >>> _ = s.compute()
@@ -31,8 +31,8 @@ class MulGate(Gate):
     """
     >>> from utils.sugar import *
     >>> a, b, c = param(1, -2, 3)
-    >>> tuple(x.compute() for x in (MulGate(a), a * b, a * b * c))
-    (1.0, -2.0, -6.0)
+    >>> tuple(x.compute() for x in (MulGate(a), a * b, prod(a, b), a * b * c, prod(a, b, c)))
+    (1.0, -2.0, -2.0, -6.0, -6.0)
 
     >>> from utils.numerical import isclose
     >>> s = a * b * c

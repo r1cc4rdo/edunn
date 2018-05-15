@@ -24,15 +24,23 @@ def sigmoid(u0):
     return SigmoidGate(_g(u0))
 
 
+def summation(u0, *argv):  # sum is a keyword
+    return AddGate(_g(u0), *[_g(x) for x in argv])
+
+
+def prod(u0, *argv):
+    return MulGate(_g(u0), *[_g(x) for x in argv])
+
+
 def norm(u0, *argv):
     return NormGate(_g(u0), *[_g(x) for x in argv])
 
 
-def minimum(u0, *argv):
+def minimum(u0, *argv):  # min is a keyword
     return MinGate(_g(u0), *[_g(x) for x in argv])
 
 
-def maximum(u0, *argv):
+def maximum(u0, *argv):  # max is a keyword
     return MaxGate(_g(u0), *[_g(x) for x in argv])
 
 
