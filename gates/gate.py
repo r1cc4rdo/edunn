@@ -58,8 +58,12 @@ class Gate(object):
             gate.backward()
         self.update_parameters(lr)
 
+    @staticmethod
+    def is_parameter():
+        return False
+
     def parameters(self):
-        return [gate for gate in self.dependencies() + [self] if not gate.igs and gate.floating]
+        return [gate for gate in self.dependencies() + [self] if gate.is_parameter()]
 
     def update_parameters(self, lr):
         if not lr == 0:

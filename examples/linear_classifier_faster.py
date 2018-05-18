@@ -8,22 +8,7 @@ Accuracy at iteration 20: 66.7 [0.43 -2.16 -0.89 0.66]
 Accuracy at iteration 30: 83.3 [-0.01 -2.30 -0.69 0.77]     << 5/6 by iteration 30
 Accuracy at iteration 500: 83.3 [0.77 -2.89 0.68 0.89]
 Accuracy at iteration 1000: 83.3 [0.95 -3.49 0.97 0.92]
-Accuracy at iteration 1500: 83.3 [0.63 -4.04 1.01 1.04]
-Accuracy at iteration 2000: 83.3 [0.91 -4.37 1.54 0.81]
-Accuracy at iteration 2500: 83.3 [1.51 -4.73 1.82 1.07]
-Accuracy at iteration 3000: 83.3 [0.88 -5.28 1.99 0.92]
-Accuracy at iteration 3500: 83.3 [1.31 -5.67 2.21 1.08]
-Accuracy at iteration 4000: 83.3 [0.90 -6.30 2.38 1.17]
-Accuracy at iteration 4500: 83.3 [1.13 -6.57 2.85 1.05]
-Accuracy at iteration 5000: 83.3 [1.28 -7.00 3.27 1.06]
-Accuracy at iteration 5500: 83.3 [1.08 -7.67 3.26 1.30]
-Accuracy at iteration 6000: 83.3 [1.47 -8.03 3.61 1.33]
-Accuracy at iteration 6500: 83.3 [1.19 -8.69 3.81 1.50]
-Accuracy at iteration 7000: 83.3 [1.41 -9.18 4.21 1.52]
-Accuracy at iteration 7500: 83.3 [1.66 -9.79 4.57 1.61]
-Accuracy at iteration 8000: 83.3 [2.00 -10.20 5.24 1.65]
-Accuracy at iteration 8500: 83.3 [1.91 -10.83 5.26 1.75]
-Accuracy at iteration 9000: 83.3 [1.71 -11.48 5.57 1.84]
+[...snip...]
 Accuracy at iteration 9500: 83.3 [1.76 -12.12 5.89 1.95]
 Accuracy at iteration 10000: 83.3 [1.70 -12.76 6.32 2.07]
 Accuracy at iteration 10500: 83.3 [2.50 -13.06 6.95 2.13]
@@ -41,12 +26,12 @@ a, b, c, m = param(1, -2, -1, 1)  # initial solution
 x, y, label = const(0, 0, 0)  # not affected by backprop
 f = minimum(1, label * m * (a * x + b * y + c))
 
-for iteration in range(30000):
+for iteration in range(12001):
 
     if iteration % 500 == 0 or (iteration % 10 == 0 and iteration < 40):
         correct = sum(f.compute() > 0 for (x.val, y.val), label.val in dataset)
-        print 'Accuracy at iteration {}: {:.1f} [{:.2f} {:.2f} {:.2f} * {:.2f}]'.format(
-            iteration, (100.0 * correct) / len(dataset), a.val, b.val, c.val, m.val)
+        print 'Accuracy at iteration {}: {:.1f} [{:.2f} * ({:.2f}, {:.2f}, {:.2f})]'.format(
+            iteration, (100.0 * correct) / len(dataset), m.val, a.val, b.val, c.val)
 
     (x.val, y.val), label.val = choice(dataset)
     f.compute()

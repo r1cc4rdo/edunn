@@ -69,3 +69,15 @@ Gate.__rtruediv__ = Gate.__rdiv__
 
 def sqrt(u0):
     return PowGate(_g(u0), _g(0.5))
+
+
+"""
+Blow up if trying to compare gates and not the values they contain.
+Python can compare ANY type, this leads to errors such as const(1) > 2 === True (-_-)
+See https://stackoverflow.com/questions/2384078/why-is-0-true-in-python for details.
+"""
+
+Gate.__lt__ = lambda self, other: 0/0  # BOOM!
+Gate.__le__ = lambda self, other: 0/0  # KABOOM!
+Gate.__gt__ = lambda self, other: 0/0  # BADABOOM!
+Gate.__ge__ = lambda self, other: 0/0  # KAPOW!

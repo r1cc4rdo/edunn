@@ -1,6 +1,7 @@
 """
 Linear classifier example.
-Annotated output:
+For regularization == 1.0, does not converge.
+Annotated output for regularization == 0.0:
 
 Accuracy at iteration 0: 66.7 [1.00 -2.00 -1.00]        << initial sol 4/6
 Accuracy at iteration 10: 66.7 [0.52 -2.14 -0.90]
@@ -30,6 +31,7 @@ dataset = (((1.2, 0.7), +1.0), ((-0.3, 0.5), -1.0), ((-3.0, -1.0), +1.0),
 a, b, c = param(1, -2, -1)  # initial solution
 x, y, label = const(0, 0, 0)  # not affected by backprop
 f = minimum(1, label * (a * x + b * y + c))
+regularization = 0.0
 
 for iteration in range(35001):
 
@@ -40,4 +42,9 @@ for iteration in range(35001):
 
     (x.val, y.val), label.val = choice(dataset)
     f.compute()
-    f.backprop(0.1)
+    f.backprop()
+
+    a.grad -= a.val * regularization
+    b.grad -= b.val * regularization
+
+    f.update_parameters(0.1)
