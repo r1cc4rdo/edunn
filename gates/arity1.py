@@ -12,7 +12,7 @@ class SigmoidGate(Gate):
     >>> x = param(0)
     >>> s = sigmoid(x)
     >>> s.compute()
-    0.5
+    array(0.5)
 
     >>> s.backprop(grad=1, lr=0.1)
     >>> s, x
@@ -25,13 +25,13 @@ class SigmoidGate(Gate):
     ds = @(x) exp(x) ./ (exp(x) + 1).^2; % ds/dx
     s(samples), ds(samples)
 
-    >>> from utils.numerical import isclose
+    >>> import numpy as np
     >>> from operator import add
     >>> gt = ((0.268941421369995, 0.196611933241482), (0.500000000000000, 0.250000000000000),
     ...       (0.731058578630005, 0.196611933241482), (0.880797077977882, 0.104993585403507),
     ...       (0.952574126822433, 0.0451766597309121), (0.982013790037908, 0.0176627062132911))
     >>> sds = [(v, d) for v, n, d in [(s.compute(), s.backprop(), x.grad) for x.val in range(-1, 5)]]
-    >>> isclose(reduce(add, zip(*gt)), reduce(add, zip(*sds)))
+    >>> np.allclose(reduce(add, zip(*gt)), reduce(add, zip(*sds)))
     True
     """
     def __init__(self, g0):
@@ -57,8 +57,8 @@ class ReluGate(Gate):
     >>> from utils.sugar import *
     >>> x = param()
     >>> r = relu(x)
-    >>> [(v, d) for v, n, d in [(r.compute(), r.backprop(grad=0.1), x.grad) for x.val in range(-2, 3)]]
-    [(0.0, 0.0), (0.0, 0.0), (0.0, 0.0), (1.0, 0.1), (2.0, 0.1)]
+    >>> [map(float, (v, d)) for v, n, d in [(r.compute(), r.backprop(grad=0.1), x.grad) for x.val in range(-2, 3)]]
+    [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [1.0, 0.1], [2.0, 0.1]]
     """
     def __init__(self, g0):
         super(ReluGate, self).__init__('relu', [g0])

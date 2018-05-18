@@ -1,5 +1,5 @@
+import numpy as np
 from utils.sugar import *
-from utils.numerical import isclose
 from numerical_gradients import randomize_inputs
 
 
@@ -21,8 +21,8 @@ def test_equivalent_pair(ga, gb, verbose=False, random_trials_per_gate=100):
             gb.backprop(grad=0.42)
             gradb = [g.grad for g in gb.parameters()]
 
-            assert(isclose(vala, valb))
-            assert(isclose(grada, gradb))
+            assert(np.allclose(vala, valb))
+            assert(np.allclose(grada, gradb))
 
         except Exception as e:
             print e, ga, gb, ga.parameters()

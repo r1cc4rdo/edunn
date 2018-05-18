@@ -14,7 +14,7 @@ class Constant(Gate):
     const[42.0, 0.0]
 
     >>> c.compute()
-    42.0
+    array(42.0)
 
     >>> c.val = 3
     >>> c
@@ -56,7 +56,7 @@ class Parameter(Gate):
     par[42.0, 0.0]
 
     >>> p.compute()
-    42.0
+    array(42.0)
 
     >>> p.val = 3
     >>> p

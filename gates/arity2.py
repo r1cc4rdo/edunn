@@ -12,7 +12,7 @@ class PowGate(Gate):
     >>> b, e = param(2, 3)
     >>> p = b ** e
     >>> p.compute()
-    8.0
+    array(8.0)
 
     >>> p.backprop(grad=-0.1)
     >>> p, b, e
@@ -20,11 +20,11 @@ class PowGate(Gate):
 
     >>> b.val, e.val = 4, 0.5  # sqrt(x)
     >>> p.compute()
-    2.0
+    array(2.0)
 
     >>> b.val, e.val = 10, -1  # 1 / x
     >>> p.compute()
-    0.1
+    array(0.1)
 
     >>> p.backprop(grad=1)  # \frac{dx^{-1}}{dx} = -x^{-2}
     >>> b

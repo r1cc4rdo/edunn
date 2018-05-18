@@ -7,13 +7,13 @@ class AddGate(Gate):
     """
     >>> from utils.sugar import *
     >>> a, b, c = param(1, -2, 3)
-    >>> tuple(x.compute() for x in (AddGate(a), a + b, summation(a, b), a + b + c, summation(a, b, c)))
+    >>> tuple(float(x.compute()) for x in (AddGate(a), a + b, summation(a, b), a + b + c, summation(a, b, c)))
     (1.0, -1.0, -1.0, 2.0, 2.0)
 
     >>> s = a + b + c
     >>> _ = s.compute()
     >>> s.backprop(grad=0.123)
-    >>> tuple(x.grad for x in (a, b, c))
+    >>> tuple(float(x.grad) for x in (a, b, c))
     (0.123, 0.123, 0.123)
     """
     def __init__(self, g0, *argv):
@@ -31,14 +31,14 @@ class MulGate(Gate):
     """
     >>> from utils.sugar import *
     >>> a, b, c = param(1, -2, 3)
-    >>> tuple(x.compute() for x in (MulGate(a), a * b, prod(a, b), a * b * c, prod(a, b, c)))
+    >>> tuple(float(x.compute()) for x in (MulGate(a), a * b, prod(a, b), a * b * c, prod(a, b, c)))
     (1.0, -2.0, -2.0, -6.0, -6.0)
 
-    >>> from utils.numerical import isclose
+    >>> import numpy as np
     >>> s = a * b * c
     >>> _ = s.compute()
     >>> s.backprop(grad=0.1)
-    >>> isclose((x.grad for x in (a, b, c)), (-0.6, 0.3, -0.2))
+    >>> np.allclose([x.grad for x in (a, b, c)], [-0.6, 0.3, -0.2])
     True
     """
     def __init__(self, g0, *argv):
@@ -55,19 +55,20 @@ class MulGate(Gate):
 
 class NormGate(Gate):
     """
+    >>> import numpy as np
     >>> from utils.sugar import *
-    >>> from utils.numerical import isclose
     >>> a, b, c = param(1, 1, 1)
-    >>> isclose((x.compute() for x in (NormGate(a), norm(a), norm(a, b), norm(a, b, c))), (1.0, 1.0, 2**0.5, 3**0.5))
+    >>> norm_gates = NormGate(a), norm(a), norm(a, b), norm(a, b, c)
+    >>> np.allclose([x.compute() for x in norm_gates], [1.0, 1.0, 2**0.5, 3**0.5])
     True
 
     >>> a.val, b.val, c.val = 3, 4, 12
     >>> n = norm(a, b, c)
     >>> n.compute()
-    13.0
+    array(13.0)
 
     >>> n.backprop(grad=1)
-    >>> isclose((x.grad for x in (a, b, c)), (x / 13.0 for x in (3, 4, 12)))
+    >>> np.allclose([x.grad for x in (a, b, c)], [x / 13.0 for x in (3, 4, 12)])
     True
     """
     def __init__(self, g0, *argv):
@@ -85,13 +86,13 @@ class MinGate(Gate):
     """
     >>> from utils.sugar import *
     >>> a, b, c = param(1, -2, 3)
-    >>> tuple(x.compute() for x in (MinGate(a), minimum(a), minimum(a, b), minimum(a, b, c)))
+    >>> tuple(float(x.compute()) for x in (MinGate(a), minimum(a), minimum(a, b), minimum(a, b, c)))
     (1.0, 1.0, -2.0, -2.0)
 
     >>> min_abc = minimum(a, b, c)
     >>> _ = min_abc.compute()
     >>> min_abc.backprop(grad=0.1)
-    >>> tuple(x.grad for x in (a, b, c))
+    >>> tuple(float(x.grad) for x in (a, b, c))
     (0.0, 0.1, 0.0)
     """
     def __init__(self, g0, *argv):
@@ -111,13 +112,13 @@ class MaxGate(MinGate):
     """
     >>> from utils.sugar import *
     >>> a, b, c = param(1, -2, 3)
-    >>> tuple(x.compute() for x in (MaxGate(a), maximum(a), maximum(a, b), maximum(a, b, c)))
+    >>> tuple(float(x.compute()) for x in (MaxGate(a), maximum(a), maximum(a, b), maximum(a, b, c)))
     (1.0, 1.0, 1.0, 3.0)
 
     >>> max_abc = maximum(a, b, c)
     >>> _ = max_abc.compute()
     >>> max_abc.backprop(grad=0.1)
-    >>> tuple(x.grad for x in (a, b, c))
+    >>> tuple(float(x.grad) for x in (a, b, c))
     (0.0, 0.0, 0.1)
     """
     def __init__(self, g0, *argv):

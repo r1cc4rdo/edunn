@@ -10,7 +10,7 @@ class NeuronGate(Gate):
     >>> a, x, b, y, c = param(2, 0.5, 0, 3, -1)
     >>> n = neuron(a, x, b, y, c)
     >>> n.compute()
-    0.5
+    array(0.5)
 
     >>> n.backprop(grad=4)
     >>> n, a, x

@@ -1,14 +1,5 @@
 from random import random
-from collections import Iterable
-
-
-def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
-    """
-    Check if two values are equal up to a relative and/or absolute precision.
-    From Python 3.5 math module
-    """
-    couples = zip(a, b) if isinstance(a, Iterable) else ((a, b),)
-    return all(abs(x - y) <= max(rel_tol * max(abs(x), abs(y)), abs_tol) for x, y in couples)
+import numpy as np
 
 
 def check_gradients(gate, verbose=False):
@@ -25,7 +16,7 @@ def check_gradients(gate, verbose=False):
         new_output = gate.compute()
         gate.backprop(grad=grad)  # populate gradients
         der = grad * (new_output - output) / delta
-        ok = isclose(input_param.grad, der, rel_tol=1e-4, abs_tol=1e-4)
+        ok = np.allclose(input_param.grad, der, rtol=1e-4, atol=1e-4)
 
         if verbose or not ok:
             print 'Param value: {:.5}, Analytical grad: {:.5}, Numerical grad: {:.5}, Abs. Diff: {:.5}'.format(

@@ -1,4 +1,5 @@
 from collections import OrderedDict
+import numpy as np
 
 
 class Gate(object):
@@ -13,12 +14,16 @@ class Gate(object):
         self.igs = input_gates
         self.val = self.grad = 0
 
-    def __repr__(self):
-        return '{}[{:.5}, {:.5}]'.format(self.name, self.val, self.grad)
+    def __setattr__(self, attr, value):
+        """
+        This ensures that the content of value and grad is always a floating type,
+        and pushes onto numpy the complexity of handling lists of values.
+        """
+        value = np.array(value, np.float64) if attr in ('val', 'grad') else value
+        super(Gate, self).__setattr__(attr, value)
 
-    def __setattr__(self, name, value):
-        value = float(value) if name in ('val', 'grad') else value  # ensure value and gradient are floats
-        super(Gate, self).__setattr__(name, value)
+    def __repr__(self):
+        return '{}[{:.5}, {:.5}]'.format(self.name, self.val.mean(), self.grad.mean())
 
     def forward(self):
         raise NotImplementedError()
