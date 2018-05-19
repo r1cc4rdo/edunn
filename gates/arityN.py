@@ -65,7 +65,7 @@ class NormGate(Gate):
     >>> a.val, b.val, c.val = 3, 4, 12
     >>> n = norm(a, b, c)
     >>> n.compute()
-    array(13.0)
+    array( 13.)
 
     >>> n.backprop(grad=1)
     >>> np.allclose([x.grad for x in (a, b, c)], [x / 13.0 for x in (3, 4, 12)])

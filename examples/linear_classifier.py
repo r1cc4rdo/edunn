@@ -37,7 +37,7 @@ for iteration in range(35001):
 
     if iteration % 2500 == 0 or (iteration % 10 == 0 and iteration < 40):
         correct = sum(f.compute() > 0 for (x.val, y.val), label.val in dataset)
-        print 'Accuracy at iteration {}: {:.1f} [{:.2f} {:.2f} {:.2f}]'.format(
+        print 'Accuracy at iteration {:5}: {:5.1f} [{} {} {}]'.format(
             iteration, (100.0 * correct) / len(dataset), a.val, b.val, c.val)
 
     (x.val, y.val), label.val = choice(dataset)

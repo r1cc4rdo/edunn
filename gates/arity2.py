@@ -12,23 +12,23 @@ class PowGate(Gate):
     >>> b, e = param(2, 3)
     >>> p = b ** e
     >>> p.compute()
-    array(8.0)
+    array( 8.)
 
     >>> p.backprop(grad=-0.1)
     >>> p, b, e
-    (pow[8.0, -0.1], par[2.0, -1.2], par[3.0, -0.55452])
+    (pow()[8.0, -0.1], par()[2.0, -1.2], par()[3.0, -0.554517744448])
 
     >>> b.val, e.val = 4, 0.5  # sqrt(x)
     >>> p.compute()
-    array(2.0)
+    array( 2.)
 
     >>> b.val, e.val = 10, -1  # 1 / x
     >>> p.compute()
-    array(0.1)
+    array( 0.1)
 
     >>> p.backprop(grad=1)  # \frac{dx^{-1}}{dx} = -x^{-2}
     >>> b
-    par[10.0, -0.01]
+    par()[10.0, -0.01]
     """
     def __init__(self, g0, g1):
         super(PowGate, self).__init__('pow', [g0, g1])

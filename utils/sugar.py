@@ -3,6 +3,8 @@ Syntactic sugar for using gates.
 """
 from gates import *
 
+np.set_printoptions(precision=4, threshold=5, edgeitems=2, sign=' ')
+
 
 def const(value=0, *argv):
     return Constant(value) if not argv else (Constant(v) for v in (value,) + argv)

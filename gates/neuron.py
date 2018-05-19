@@ -10,13 +10,13 @@ class NeuronGate(Gate):
     >>> a, x, b, y, c = param(2, 0.5, 0, 3, -1)
     >>> n = neuron(a, x, b, y, c)
     >>> n.compute()
-    array(0.5)
+    array( 0.5)
 
     >>> n.backprop(grad=4)
     >>> n, a, x
-    (neuron[0.5, 4.0], par[2.0, 0.5], par[0.5, 2.0])
+    (neuron()[0.5, 4.0], par()[2.0, 0.5], par()[0.5, 2.0])
     >>> b, y, c
-    (par[0.0, 3.0], par[3.0, 0.0], par[-1.0, 1.0])
+    (par()[0.0, 3.0], par()[3.0, 0.0], par()[-1.0, 1.0])
     """
     def __init__(self, a, x, b, y, c):
         super(NeuronGate, self).__init__('neuron', [a, x, b, y, c])

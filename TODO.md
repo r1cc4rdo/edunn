@@ -5,6 +5,7 @@
 3. Stopping criteria for backprop
 4. RandGate (does it get marginalized? leak weights?)
 5. numpy instead of values (tests / doctest w/ arrays)
+6. input gate with name (compute(name: val))
 
 - momentum (nesterov)
 - opt. methods
@@ -15,6 +16,7 @@
     - batch gradient descent
     - rmsprop
     - adam
+    - nag
     - adadelta
     - adagrad
 - quad. programming
