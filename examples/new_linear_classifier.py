@@ -22,32 +22,29 @@ Accuracy at iteration 30000: 100.0 [5.01 -27.78 14.50]
 Accuracy at iteration 32500: 100.0 [5.13 -28.19 14.60]  << margin requirement satisfied, gradient 0
 Accuracy at iteration 35000: 100.0 [5.13 -28.19 14.60]
 """
-from random import choice, seed
+from random import choice
 from gates.sugar import *
-from nn.network import Net
 
-dataset = ((1.2, 0.7, +1.0), (-0.3, 0.5, -1.0), (-3.0, -1.0, +1.0),  # x, y, label
-           (0.1, 1.0, -1.0), (3.0, 1.1, -1.0), (2.1, -3.0, +1.0))
+dataset = (((1.2, 0.7), +1.0), ((-0.3, 0.5), -1.0), ((-3.0, -1.0), +1.0),
+           ((0.1, 1.0), -1.0), ((3.0, 1.1), -1.0), ((2.1, -3.0), +1.0))
 
-a, b, c = params('a', 'b', 'c')
-x, y, label = inputs('x', 'y', 'label')
+a, b, c = param(1, -2, -1)  # initial solution
+x, y, label = const(0, 0, 0)  # not affected by backprop
 f = minimum(1, label * (a * x + b * y + c))
+regularization = 0.0
 
-n = Net(f)
-n.init_parameters({'a': 1, 'b': -2, 'c': -1})
-
-seed(0xbeef)
-grad, lr = 1.0, 0.1
 for iteration in range(35001):
 
     if iteration % 2500 == 0 or (iteration % 10 == 0 and iteration < 40):
-        correct = sum(n.compute() > 0 for (x.val, y.val), label.val in dataset)
+        correct = sum(f.compute() > 0 for (x.val, y.val), label.val in dataset)
         print 'Accuracy at iteration {:5}: {:5.1f} [{} {} {}]'.format(
             iteration, (100.0 * correct) / len(dataset), a.val, b.val, c.val)
 
-    n.reset_gradients()
-    n.set_inputs(dict(zip(('x', 'y', 'label'), choice(dataset))))
+    (x.val, y.val), label.val = choice(dataset)
+    f.compute()
+    f.backprop()
 
-    n.compute()
-    n.backprop(grad=grad)
-    n.update_parameters(lr=lr)
+    a.grad -= a.val * regularization
+    b.grad -= b.val * regularization
+
+    f.update_parameters(0.1)

@@ -8,7 +8,7 @@ class SigmoidGate(Gate):
     One example is the logistic function, defined as: $$S(x) = \frac{1}{1 + e^{-x}} = \frac{e^x}{e^x + 1}$$
     For $x = 0$, $s(x) = \frac{1}{2}$ and $\frac{ds}{dx} = \frac{1}{4}$.
 
-    >>> from utils.sugar import *
+    >>> from nn.sugar import *
     >>> x = param(0)
     >>> s = sigmoid(x)
     >>> s.compute()
@@ -55,7 +55,7 @@ class ReluGate(Gate):
     Behaves like $f(x) = x$ if $x \geq 0$, $x = 0$ otherwise.
     Let's compute the value and gradient of relu(x) for x in -2..2:
 
-    >>> from utils.sugar import *
+    >>> from nn.sugar import *
     >>> x = param()
     >>> r = relu(x)
     >>> [map(float, (v, d)) for v, n, d in [(r.compute(), r.backprop(grad=0.1), x.grad) for x.val in range(-2, 3)]]

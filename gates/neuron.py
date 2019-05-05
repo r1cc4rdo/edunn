@@ -6,7 +6,7 @@ class NeuronGate(Gate):
     """
     Neuron with a sigmoid non-linearity, $N(x,y) = sigmoid(ax + by +c)$
 
-    >>> from utils.sugar import *
+    >>> from nn.sugar import *
     >>> a, x, b, y, c = param(2, 0.5, 0, 3, -1)
     >>> n = neuron(a, x, b, y, c)
     >>> n.compute()

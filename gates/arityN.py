@@ -5,7 +5,7 @@ from gates.gate import Gate
 
 class AddGate(Gate):
     """
-    >>> from utils.sugar import *
+    >>> from nn.sugar import *
     >>> a, b, c = param(1, -2, 3)
     >>> tuple(float(x.compute()) for x in (AddGate(a), a + b, summation(a, b), a + b + c, summation(a, b, c)))
     (1.0, -1.0, -1.0, 2.0, 2.0)
@@ -29,7 +29,7 @@ class AddGate(Gate):
 
 class MulGate(Gate):
     """
-    >>> from utils.sugar import *
+    >>> from nn.sugar import *
     >>> a, b, c = param(1, -2, 3)
     >>> tuple(float(x.compute()) for x in (MulGate(a), a * b, prod(a, b), a * b * c, prod(a, b, c)))
     (1.0, -2.0, -2.0, -6.0, -6.0)
@@ -56,7 +56,7 @@ class MulGate(Gate):
 class NormGate(Gate):
     """
     >>> import numpy as np
-    >>> from utils.sugar import *
+    >>> from nn.sugar import *
     >>> a, b, c = param(1, 1, 1)
     >>> norm_gates = NormGate(a), norm(a), norm(a, b), norm(a, b, c)
     >>> np.allclose([x.compute() for x in norm_gates], [1.0, 1.0, 2**0.5, 3**0.5])
@@ -84,7 +84,7 @@ class NormGate(Gate):
 
 class MinGate(Gate):
     """
-    >>> from utils.sugar import *
+    >>> from nn.sugar import *
     >>> a, b, c = param(1, -2, 3)
     >>> tuple(float(x.compute()) for x in (MinGate(a), minimum(a), minimum(a, b), minimum(a, b, c)))
     (1.0, 1.0, -2.0, -2.0)
@@ -110,7 +110,7 @@ class MinGate(Gate):
 
 class MaxGate(MinGate):
     """
-    >>> from utils.sugar import *
+    >>> from nn.sugar import *
     >>> a, b, c = param(1, -2, 3)
     >>> tuple(float(x.compute()) for x in (MaxGate(a), maximum(a), maximum(a, b), maximum(a, b, c)))
     (1.0, 1.0, 1.0, 3.0)

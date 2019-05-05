@@ -8,7 +8,7 @@ class PowGate(Gate):
     All domain checks are left to the standard library -- we assume that the operation is well-defined
     for the input base and exponent pair.
 
-    >>> from utils.sugar import *
+    >>> from nn.sugar import *
     >>> b, e = param(2, 3)
     >>> p = b ** e
     >>> p.compute()

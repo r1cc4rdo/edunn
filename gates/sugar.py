@@ -1,17 +1,19 @@
 """
 Syntactic sugar for using gates.
 """
+from collections import Iterable
+from random import randint
 from gates import *
 
-np.set_printoptions(precision=4, threshold=5, edgeitems=2, sign=' ')
+
+def inputs(*args):
+    names = list(args) if len(args) else ['i' + str(randint(1e5, 1e6-1))]
+    return (Input(name) for name in names)
 
 
-def const(value=0, *argv):
-    return Constant(value) if not argv else (Constant(v) for v in (value,) + argv)
-
-
-def param(value=0, *argv):
-    return Parameter(value) if not argv else (Parameter(v) for v in (value,) + argv)
+def params(*args):
+    names = list(args) if len(args) else ['i' + str(randint(1e5, 1e6-1))]
+    return (Parameter(name) for name in names)
 
 
 def _g(gate_or_value):  # upgrade scalar to Constant gate, or return unchanged
@@ -55,7 +57,9 @@ Gate.__mul__ = lambda self, other: MulGate(_g(self), _g(other))
 Gate.__pow__ = lambda self, other: PowGate(_g(self), _g(other))
 Gate.__rpow__ = lambda self, other: PowGate(_g(other), _g(self))
 
-""" below this line, derived gates and operators """
+"""
+Derived gates and operators
+"""
 
 Gate.__radd__ = Gate.__add__
 Gate.__rmul__ = Gate.__mul__
@@ -72,10 +76,9 @@ Gate.__rtruediv__ = Gate.__rdiv__
 def sqrt(u0):
     return PowGate(_g(u0), _g(0.5))
 
-
 """
 Blow up if trying to compare gates and not the values they contain.
-Python can compare ANY type, this leads to errors such as const(1) > 2 === True (-_-)
+Python 2.7 can compare ANY type, this leads to errors such as const(1) > 2 === True (-_-)
 See https://stackoverflow.com/questions/2384078/why-is-0-true-in-python for details.
 """
 
