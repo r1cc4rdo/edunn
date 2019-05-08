@@ -42,3 +42,22 @@ Restore
 
 net.input = xxx
 Paper notes
+
+## Network class
+
+- net.compute(dict{inputs})
+- net.load(file), net.save(file)
+- net.cuda(). Numba? Cupy?
+- at init, make sure:
+    - rename to unique name with suffixes
+    - associate unique names with inputs
+    - ensure every val is numpy float32 (or whatever, parameterized)
+    - ensure gradients have the same shape as vals
+    - initialize gradients to zero
+    - initialize values of parameters
+
+## Miscellanea
+
+- draw network with ...
+- run all tests with discovery
+- example learning area of a circle

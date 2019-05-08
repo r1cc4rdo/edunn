@@ -1,4 +1,3 @@
-import abc
 import numpy as np
 
 from gates.gate import Gate
@@ -6,7 +5,7 @@ from gates.gate import Gate
 
 class Leaf(Gate):
     """
-    Superclass for all arity-0 nodes (which are leaves in the spanning tree).
+    Abstract superclass for all arity-0 nodes (which are leaves in the spanning tree).
     No input gates, so nothing to do in forward and backward passes.
 
     Leaf nodes can be constants, inputs or weights.
@@ -23,6 +22,9 @@ class Leaf(Gate):
     >>> r = Input('radius')
     >>> e = Weight()
 
+    >>> tuple(x.name for x in (pi, r, e))
+    ('const', 'input', 'weight')
+
     >>> all(map(lambda x: x is None, (r.val, r.grad, e.grad, pi.grad)))
     True
 
@@ -30,9 +32,8 @@ class Leaf(Gate):
     ('radius', 3.14, array(nan))
     """
 
-    @abc.abstractmethod
-    def __init__(self, name):
-        super(Leaf, self).__init__(name, [])
+    def __init__(self):
+        super(Leaf, self).__init__([])
 
     def forward(self):
         pass
@@ -43,22 +44,28 @@ class Leaf(Gate):
 
 class Const(Leaf):
 
+    name = 'const'
+
     def __init__(self, value):
-        super(Const, self).__init__('const')
+        super(Const, self).__init__()
         self.val = value
 
 
 class Input(Leaf):
 
+    name = 'input'
+
     def __init__(self, alias):
-        super(Input, self).__init__('input')
+        super(Input, self).__init__()
         self.alias = alias
 
 
 class Weight(Leaf):
 
+    name = 'weight'
+
     def __init__(self, shape=()):
-        super(Weight, self).__init__('weight')
+        super(Weight, self).__init__()
         self.val = np.full(shape, np.nan)
 
 
