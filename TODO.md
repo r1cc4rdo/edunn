@@ -61,3 +61,4 @@ Paper notes
 - draw network with ...
 - run all tests with discovery
 - example learning area of a circle
+- use 2to3 to upgrade to python3 https://docs.python.org/2/library/2to3.html

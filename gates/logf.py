@@ -3,7 +3,7 @@ import numpy as np
 from gates.gate import Gate
 
 
-class Sigmoid(Gate):
+class Logf(Gate):
     """
     Sigmoid functions are a class of S-shaped, monotonic, saturating nonlinearities.
     This gate implements the logistic function, defined as: $$S(x) = \frac{1}{1 + e^{-x}} = \frac{e^x}{e^x + 1}$$
@@ -42,15 +42,17 @@ class Sigmoid(Gate):
     >>> np.allclose(gt, zip(s.val, x.grad))
     True
     """
+    name = 'logf'
+
     def __init__(self, input_gate):
-        super(Sigmoid, self).__init__('sig', [input_gate])
+        super().__init__([input_gate])
 
     @staticmethod
-    def sigmoid(x):
+    def logf(x):
         return 1.0 / (1.0 + np.exp(-x))
 
     def forward(self):
-        self.val = self.sigmoid(self.igs[0].val)
+        self.val = self.logf(self.igs[0].val)
 
     def backward(self):
         self.igs[0].grad += (self.val * (1 - self.val)) * self.grad

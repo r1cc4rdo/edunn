@@ -22,8 +22,10 @@ class Relu(Gate):
     >>> x.grad
     array([0. , 0. , 0. , 0.1, 0.1])
     """
+    name = 'relu'
+
     def __init__(self, input_gate):
-        super(Relu, self).__init__('relu', [input_gate])
+        super().__init__([input_gate])
 
     def forward(self):
         self.val = np.maximum(self.igs[0].val, 0.0)

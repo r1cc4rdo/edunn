@@ -33,7 +33,7 @@ class Leaf(Gate):
     """
 
     def __init__(self):
-        super(Leaf, self).__init__([])
+        super().__init__([])
 
     def forward(self):
         pass
@@ -47,7 +47,7 @@ class Const(Leaf):
     name = 'const'
 
     def __init__(self, value):
-        super(Const, self).__init__()
+        super().__init__()
         self.val = value
 
 
@@ -56,7 +56,7 @@ class Input(Leaf):
     name = 'input'
 
     def __init__(self, alias):
-        super(Input, self).__init__()
+        super().__init__()
         self.alias = alias
 
 
@@ -65,7 +65,7 @@ class Weight(Leaf):
     name = 'weight'
 
     def __init__(self, shape=()):
-        super(Weight, self).__init__()
+        super().__init__()
         self.val = np.full(shape, np.nan)
 
 

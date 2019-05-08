@@ -38,8 +38,10 @@ class Pow(Gate):
 
     >>> tests on arrays
     """
-    def __init__(self, g0, g1):
-        super(Pow, self).__init__('pow', [g0, g1])
+    name = 'pow'
+
+    def __init__(self, base, exp):
+        super().__init__([base, exp])
 
     def forward(self):
         self.val = np.power(self.igs[0].val, self.igs[1].val)
