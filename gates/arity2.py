@@ -2,7 +2,7 @@ import math
 from gates.gate import Gate
 
 
-class PowGate(Gate):
+class Pow(Gate):
     """
     The exponentiation function can be used to implement division and n-th root extraction gates.
     All domain checks are left to the standard library -- we assume that the operation is well-defined

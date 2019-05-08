@@ -1,39 +1,36 @@
-"""
-In this file we define leaf gates.
-A leaf gate has no inputs, and holds a value.
-The three types defined here are Constants, Inputs and Parameters.
-Only Parameters are affected by gradients, and change throughout training.
-
->>> i, p, k = Input('in'), Parameter('par'), Constant(3)
->>> i, p, k
-(input(in)_nan/nan, param(par)_nan/nan, const_3.0/nan)
-
->>> import gates.sugar
->>> from nn.network import Net
->>> n = Net(i * p + k)
->>> i.val, p.val = -6, 0.5
->>> n.compute()
-array(0.)
-
->>> n.reset_gradients()
->>> n.backprop(1)
->>> n.update_parameters(0.1)
->>> i, p, k
-(input(in)_-6.0/0.5, param(par)_0.5/-6.0, const_3.0/1.0)
-
-sugar aliases
-
-x = range(...)
-"""
+import abc
+import numpy as np
 
 from gates.gate import Gate
 
 
 class Leaf(Gate):
     """
-    Superclass for all leaf nodes.
+    Superclass for all arity-0 nodes (which are leaves in the spanning tree).
     No input gates, so nothing to do in forward and backward passes.
+
+    Leaf nodes can be constants, inputs or weights.
+    Constants are immutable values, unaffected by gradients reaching them.
+    Inputs to a network are named nodes, from where training samples are fed.
+    Weights are the floating model parameters, optimized during training.
+
+    For example, let's say we are trying to learn the formula for the area of a
+    circle. Given a radius $r$, the area $A$ is equal to: $$A = pi * r ^ e$$ where
+    the exponent $e := 2$. In this scenario, pi is a constant, r is an input, e is
+    a model parameter to be learned.
+
+    >>> pi = Const(np.pi)
+    >>> r = Input('radius')
+    >>> e = Weight()
+
+    >>> all(map(lambda x: np.isnan(x), (r.val, r.grad, e.val, e.grad, pi.grad)))
+    True
+
+    >>> r.alias, np.round(pi.val, 2)
+    ('radius', 3.14)
     """
+
+    @abc.abstractmethod
     def __init__(self, name):
         super(Leaf, self).__init__(name, [])
 
@@ -44,62 +41,28 @@ class Leaf(Gate):
         pass
 
 
-class NamedLeaf(Leaf):
-    """
-    Superclass to input and parameter variables. The difference between input and parameter is only semantic.
-    For example, in f(x, y) = relu(a * x + b * y + c) the variables x, y are an input tuple.
-    They will have meaningful gradients, but we are not interested in updating their value.
-    a, b, c on the contrary are parameters (weights) to the model, optimized during training.
-    """
-    def __init__(self, name, alias):
-        super(NamedLeaf, self).__init__(name)
-        self.alias = alias
-
-    def __repr__(self):
-        return '{}({})_{}/{}'.format(self.name, self.alias, self.val, self.grad)
-
-    def __str__(self):
-        return self.alias if self.alias else self.name
-
-
-class Constant(Leaf):
+class Const(Leaf):
 
     def __init__(self, value):
-        super(Constant, self).__init__('const')
+        super(Const, self).__init__('k')
         self.val = value
 
 
-class Input(NamedLeaf):
-    """
-    A variable with a name, meant as a model input (e.g. training example).
-    See Named for a more in-depth discussion of the differences with Parameter.
-    """
+class Input(Leaf):
+
     def __init__(self, alias):
-        super(Input, self).__init__('input', alias)
+        super(Input, self).__init__('in')
+        self.alias = alias
 
 
-class Parameter(NamedLeaf):
-    """
-    A variable with a name, meant as a model parameter (e.g. weight).
-    See Named for a more in-depth discussion of the differences with Input.
-    """
-    def __init__(self, alias=''):
-        super(Parameter, self).__init__('param', alias)
+class Weight(Leaf):
+
+    def __init__(self, shape=()):
+        super(Weight, self).__init__('w')
+        self.val = np.full(shape, np.nan)
 
 
 if __name__ == '__main__':
 
-    # import doctest
-    # doctest.testmod(verbose=True)
-
-    import gates.sugar
-    from nn.network import Net
-
-    i, p, k = Input('in'), Parameter('par'), Constant(3)
-    i.val, p.val = -6, 0.5
-
-    n = Net(i * p + k)
-    n.compute()
-    n.reset_gradients()
-    n.backprop(1)
-    n.update_parameters(0.1)
+    import doctest
+    doctest.testmod(verbose=True)

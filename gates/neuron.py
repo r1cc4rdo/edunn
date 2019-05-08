@@ -1,5 +1,5 @@
 from gate import Gate
-from arity1 import SigmoidGate
+from arity1 import Sigmoid
 
 
 class NeuronGate(Gate):
@@ -23,7 +23,7 @@ class NeuronGate(Gate):
 
     def forward(self):
         a, x, b, y, c = (in_node.val for in_node in self.igs)
-        self.val = SigmoidGate.sigmoid(a * x + b * y + c)
+        self.val = Sigmoid.sigmoid(a * x + b * y + c)
 
     def backward(self):
         partial_grad = self.val * (1 - self.val) * self.grad
