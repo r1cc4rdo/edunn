@@ -2,13 +2,13 @@
 converges to 5.00 -27.50 14.25
 
 """
-from utils.sugar import *
+from gates.sugar import *
 
 dataset = (((1.2, 0.7), +1.0), ((-0.3, 0.5), -1.0), ((-3.0, -1.0), +1.0),
            ((0.1, 1.0), -1.0), ((3.0, 1.1), -1.0), ((2.1, -3.0), +1.0))
 
-a, b, c, m = param(1, -2, -1, 1)  # initial solution
-x, y, label = const(0, 0, 0)  # not affected by backprop
+a, b, c, m = params(1, -2, -1, 1)  # initial solution
+x, y, label = consts(0, 0, 0)  # not affected by backprop
 # f = minimum(1, label * m * (a * x + b * y + c))
 f = minimum(1, label * (a * x + b * y + c))
 k = norm(a, b, c)  # konstraint

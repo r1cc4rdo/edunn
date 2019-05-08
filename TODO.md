@@ -29,3 +29,16 @@ np.set_printoptions(precision=4, threshold=5, edgeitems=2, sign=' ')
 - compile into a callable function?
 - animated graph in a notebook
 - names for parameters, constants
+
+
+Restore
+
+    def checkpoint(self):
+        return [gate.val for gate in self.parameters()]
+
+    def restore_checkpoint(self, checkpoint):
+        for gate, val in zip(self.parameters(), checkpoint):
+            gate.val = val
+
+net.input = xxx
+Paper notes
