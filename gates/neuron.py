@@ -1,5 +1,5 @@
 from gate import Gate
-from arity1 import Sigmoid
+from sigmoid import Sigmoid
 
 
 class NeuronGate(Gate):

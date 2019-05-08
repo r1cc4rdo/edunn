@@ -23,11 +23,11 @@ class Leaf(Gate):
     >>> r = Input('radius')
     >>> e = Weight()
 
-    >>> all(map(lambda x: np.isnan(x), (r.val, r.grad, e.val, e.grad, pi.grad)))
+    >>> all(map(lambda x: x is None, (r.val, r.grad, e.grad, pi.grad)))
     True
 
-    >>> r.alias, np.round(pi.val, 2)
-    ('radius', 3.14)
+    >>> r.alias, np.round(pi.val, 2), e.val
+    ('radius', 3.14, array(nan))
     """
 
     @abc.abstractmethod
@@ -44,21 +44,21 @@ class Leaf(Gate):
 class Const(Leaf):
 
     def __init__(self, value):
-        super(Const, self).__init__('k')
+        super(Const, self).__init__('const')
         self.val = value
 
 
 class Input(Leaf):
 
     def __init__(self, alias):
-        super(Input, self).__init__('in')
+        super(Input, self).__init__('input')
         self.alias = alias
 
 
 class Weight(Leaf):
 
     def __init__(self, shape=()):
-        super(Weight, self).__init__('w')
+        super(Weight, self).__init__('weight')
         self.val = np.full(shape, np.nan)
 
 

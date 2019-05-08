@@ -1,5 +1,4 @@
 import abc
-import numpy as np
 
 
 class Gate(object):
@@ -12,7 +11,7 @@ class Gate(object):
     def __init__(self, name, input_gates):
         self.name = name
         self.igs = input_gates
-        self.val = self.grad = np.nan
+        self.val = self.grad = None
 
     @abc.abstractmethod
     def forward(self):
@@ -24,11 +23,3 @@ class Gate(object):
 
     def __str__(self):
         return self.name
-
-    def __setattr__(self, attr, value):
-        """
-        This ensures that the content of value and grad is always a floating type,
-        and pushes onto numpy the complexity of handling lists of values.
-        """
-        value = np.array(value, np.float32) if attr in ('val', 'grad') else value
-        super(Gate, self).__setattr__(attr, value)
