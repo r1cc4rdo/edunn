@@ -62,3 +62,99 @@ Paper notes
 - run all tests with discovery
 - example learning area of a circle
 - use 2to3 to upgrade to python3 https://docs.python.org/2/library/2to3.html
+
+## Scratchpad
+
+
+"""
+In this file we define leaf gates.
+A leaf gate has no inputs, and holds a value.
+The three types defined here are Constants, Inputs and Parameters.
+Only Parameters are affected by gradients, and change throughout training.
+
+>>> i, p, k = Input('in'), Parameter('par'), Constant(3)
+>>> i, p, k
+(input(in)_nan/nan, param(par)_nan/nan, const_3.0/nan)
+
+>>> import gates.sugar
+>>> from nn.network import Net
+>>> n = Net(i * p + k)
+>>> i.val, p.val = -6, 0.5
+>>> n.compute()
+array(0.)
+
+>>> n.reset_gradients()
+>>> n.backprop(1)
+>>> n.update_parameters(0.1)
+>>> i, p, k
+(input(in)_-6.0/0.5, param(par)_0.5/-6.0, const_3.0/1.0)
+
+sugar aliases
+
+x = range(...)
+"""
+
+if __name__ == '__main__':
+
+    # import doctest
+    # doctest.testmod(verbose=True)
+
+    import gates.sugar
+    from nn.network import Net
+
+    i, p, k = Input('in'), Parameter('par'), Constant(3)
+    i.val, p.val = -6, 0.5
+
+    n = Net(i * p + k)
+    n.compute()
+    n.reset_gradients()
+    n.backprop(1)
+    n.update_parameters(0.1)
+
+
+-----------------
+
+
+    For example, let's try to learn the formula for the area of a circle.
+    Given a radius $r$, the area $A$ is equal to: $$A = pi * r ^ e$$ where the
+    exponent $e := 2$.
+
+    # >>> import numpy as np
+    >>> import gates
+    >>> pi = Const(np.pi)
+    >>> r = Input('radius')
+    >>> e = Weight()
+    >>> A = pi * Pow(r, e)
+    >>> for r.val in 10 * (np.random((100,)) - 0.5):
+    >>>     e.grad = 2
+    >>>     A.forward()
+    >>>     A.backward()
+
+
+
+
+
+import doctest
+import unittest
+
+import doctest_simple
+
+suite = unittest.TestSuite()
+suite.addTest(doctest.DocTestSuite(doctest_simple))
+suite.addTest(doctest.DocFileSuite('doctest_in_help.rst'))
+
+runner = unittest.TextTestRunner(verbosity=2)
+runner.run(suite)
+The tests from each source are collapsed into a single outcome, instead of being reported individually.
+
+$ python doctest_unittest.py
+
+my_function (doctest_simple)
+Doctest: doctest_simple.my_function ... ok
+doctest_in_help.rst
+Doctest: doctest_in_help.rst ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.003s
+
+OK
