@@ -1,4 +1,5 @@
 from gates.gate import Gate
+from functools import reduce
 
 
 class MulGate(Gate):

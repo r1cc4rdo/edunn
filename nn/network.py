@@ -56,5 +56,5 @@ class Net(object):
             g.backward()
 
     def update_parameters(self, lr):
-        for g in self.parameters.values():
+        for g in list(self.parameters.values()):
             g.val += lr * g.grad

@@ -25,7 +25,7 @@ def test_equivalent_pair(ga, gb, verbose=False, random_trials_per_gate=100):
             assert(np.allclose(grada, gradb))
 
         except Exception as e:
-            print e, ga, gb, ga.parameters()
+            print(e, ga, gb, ga.parameters())
             return False
 
     return True
@@ -53,4 +53,4 @@ def test_all_equivalent_gates(verbose=False):
 
 
 if __name__ == '__main__':
-    print '{} failures out of {} tests performed'.format(*test_all_equivalent_gates())
+    print('{} failures out of {} tests performed'.format(*test_all_equivalent_gates()))

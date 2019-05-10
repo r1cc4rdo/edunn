@@ -18,4 +18,4 @@ def run_doc_tests(verbose=False):
 
 
 if __name__ == '__main__':
-    print '{} failures out of {} tests performed'.format(*run_doc_tests())
+    print('{} failures out of {} tests performed'.format(*run_doc_tests()))

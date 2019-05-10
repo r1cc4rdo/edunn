@@ -19,8 +19,8 @@ def check_gradients(gate, verbose=False):
         ok = np.allclose(input_param.grad, der, rtol=1e-4, atol=1e-4)
 
         if verbose or not ok:
-            print 'Param value: {:.5}, Analytical grad: {:.5}, Numerical grad: {:.5}, Abs. Diff: {:.5}'.format(
-                prev_val, float(input_param.grad), der, float(input_param.grad) - der)
+            print('Param value: {:.5}, Analytical grad: {:.5}, Numerical grad: {:.5}, Abs. Diff: {:.5}'.format(
+                prev_val, float(input_param.grad), der, float(input_param.grad) - der))
 
         input_param.val = prev_val  # restore original value
         if not ok:

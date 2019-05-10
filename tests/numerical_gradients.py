@@ -34,7 +34,7 @@ def numerical_vs_analytical_gradients(verbose=False, random_trials_per_gate=10):
         for num_params in params_to_test:  # arity of the gate. For variable number of arguments, we test 1..3
 
             if verbose:
-                print 'Testing {}, {} parameter(s)'.format(gate_class.__name__, num_params)
+                print('Testing {}, {} parameter(s)'.format(gate_class.__name__, num_params))
 
             gate = gate_class(*params[:num_params])
             for _ in range(random_trials_per_gate):
@@ -43,7 +43,7 @@ def numerical_vs_analytical_gradients(verbose=False, random_trials_per_gate=10):
                 try:
                     assert(check_gradients(gate, verbose=verbose))
                 except Exception as e:
-                    print e, gate, gate.igs
+                    print(e, gate, gate.igs)
                     failures += 1
 
                 attempts += 1
@@ -52,4 +52,4 @@ def numerical_vs_analytical_gradients(verbose=False, random_trials_per_gate=10):
 
 
 if __name__ == '__main__':
-    print '{} failures out of {} tests performed'.format(*numerical_vs_analytical_gradients())
+    print('{} failures out of {} tests performed'.format(*numerical_vs_analytical_gradients()))

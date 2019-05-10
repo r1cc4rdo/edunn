@@ -19,7 +19,7 @@ for iteration in range(15001):
 
     if iteration % 500 == 0 or (iteration % 10 == 0 and iteration < 40):
         correct = sum(score.compute() > 0 for (x.val, y.val), label.val in dataset)
-        print 'Accuracy at iteration {}: {:.1f}'.format(iteration, (100.0 * correct) / len(dataset))
+        print('Accuracy at iteration {}: {:.1f}'.format(iteration, (100.0 * correct) / len(dataset)))
 
     (x.val, y.val), label.val = choice(dataset)
     score.compute()

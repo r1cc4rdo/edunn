@@ -39,8 +39,8 @@ seed(0xbeef)
 for iteration in range(10):
 
     correct = sum(f(label, a, x, b, y, c) > 0 for x, y, label in dataset)
-    print '[{:5}] Accuracy: {:5.1f} [{:.4f} {:.4f} {:.4f}]'.format(
-        iteration, (100.0 * correct) / len(dataset), a, b, c)
+    print('[{:5}] Accuracy: {:5.1f} [{:.4f} {:.4f} {:.4f}]'.format(
+        iteration, (100.0 * correct) / len(dataset), a, b, c))
 
     (x, y), label = choice(dataset)
     if f(label, a, x, b, y, c) < 1.0:

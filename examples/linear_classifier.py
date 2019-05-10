@@ -42,11 +42,11 @@ for iteration in range(35001):
 
     if iteration % 2500 == 0 or (iteration % 10 == 0 and iteration < 40):
         correct = sum(n.compute() > 0 for (x.val, y.val), label.val in dataset)
-        print 'Accuracy at iteration {:5}: {:5.1f} [{} {} {}]'.format(
-            iteration, (100.0 * correct) / len(dataset), a.val, b.val, c.val)
+        print('Accuracy at iteration {:5}: {:5.1f} [{} {} {}]'.format(
+            iteration, (100.0 * correct) / len(dataset), a.val, b.val, c.val))
 
     n.reset_gradients()
-    n.set_inputs(dict(zip(('x', 'y', 'label'), choice(dataset))))
+    n.set_inputs(dict(list(zip(('x', 'y', 'label'), choice(dataset)))))
 
     n.compute()
     n.backprop(grad=grad)
