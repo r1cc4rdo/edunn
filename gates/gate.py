@@ -15,14 +15,36 @@ class Gate(ABC):
     @property
     @abstractmethod
     def name(self):
+        """
+        Returns a string identifier for the gate type.
+        This does not uniquely identify each gate/layer in a network.
+        :return:
+        """
+        pass
+
+    @property
+    @abstractmethod
+    def arity(self):
+        """
+
+        :return:
+        """
         pass
 
     @abstractmethod
     def forward(self):
+        """
+
+        :return:
+        """
         pass
 
     @abstractmethod
     def backward(self):
+        """
+
+        :return:
+        """
         pass
 
     def __str__(self):

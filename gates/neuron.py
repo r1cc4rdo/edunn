@@ -1,29 +1,34 @@
-from gate import Gate
-from sigmoid import Sigmoid
+from gates.gate import Gate
+from gates.logf import Logf
 
 
-class NeuronGate(Gate):
+class Neuron(Gate):
     """
-    Neuron with a sigmoid non-linearity, $N(x,y) = sigmoid(ax + by +c)$
+    Neuron with a logistic function non-linearity, $N(x,y) = logf(ax + by +c)$
 
-    >>> from nn.sugar import *
-    >>> a, x, b, y, c = param(2, 0.5, 0, 3, -1)
-    >>> n = neuron(a, x, b, y, c)
-    >>> n.compute()
+    >>> from gates.leaf import Const
+    >>> a, x, b, y, c = (Const(v) for v in (2, 0.5, 0, 3, -1))
+    >>> n = Neuron(a, x, b, y, c)
+    >>> n.forward()
+    >>> n.val
     array( 0.5)
 
-    >>> n.backprop(grad=4)
-    >>> n, a, x
+    >>> n.grad = 4
+    >>> n.backward()
+    >>> tuple(v for g in (n, a, x) for v in (g.val, g.grad))
     (neuron()[0.5, 4.0], par()[2.0, 0.5], par()[0.5, 2.0])
-    >>> b, y, c
+    >>> tuple(v for g in (b, y, c) for v in (g.val, g.grad))
     (par()[0.0, 3.0], par()[3.0, 0.0], par()[-1.0, 1.0])
     """
+    name = 'neuron'
+    arity = 5
+
     def __init__(self, a, x, b, y, c):
-        super(NeuronGate, self).__init__('neuron', [a, x, b, y, c])
+        super().__init__([a, x, b, y, c])
 
     def forward(self):
         a, x, b, y, c = (in_node.val for in_node in self.igs)
-        self.val = Sigmoid.sigmoid(a * x + b * y + c)
+        self.val = Logf.logf(a * x + b * y + c)
 
     def backward(self):
         partial_grad = self.val * (1 - self.val) * self.grad

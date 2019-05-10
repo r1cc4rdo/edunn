@@ -10,35 +10,44 @@ class Pow(Gate):
     input base and exponent pair.
 
     >>> from gates import *
-    >>> b, e = Const(2.), Const(3.)
+    >>> b, e = Const(2.), Const(3.)  # x ** y
     >>> p = Pow(b, e)
     >>> p.forward()
-    >>> p.val
-    array( 8.)
+    >>> tuple(g.val for g in (p, b, e))
+    (8.0, 2.0, 3.0)
 
-    >>> p.grad = -0.1
+    >>> p.grad, b.grad, e.grad = -0.1, 0, 0
     >>> p.backward()
-    >>> (v for g in (p, b, e) for v in (g.val, g.grad))
-    (8.0, -0.1, 2.0, -1.2, 3.0, -0.554517744448)
+    >>> tuple(round(g.grad, 4) for g in (p, b, e))
+    (-0.1, -1.2, -0.5545)
 
     >>> b.val, e.val = 4, 0.5  # sqrt(x)
     >>> p.forward()
     >>> p.val
-    array( 2.)
+    2.0
 
-    >>> b.val, e.val = 10, -1  # 1 / x
+    >>> b.val, e.val = 10.0, -1  # 1 / x
     >>> p.forward()
     >>> p.val
-    array( 0.1)
+    0.1
 
-    >>> p.grad = 1
+    >>> p.grad, b.grad, e.grad = 1, 0, 0
     >>> p.backward()  # \frac{dx^{-1}}{dx} = -x^{-2}
     >>> b.val, b.grad
     (10.0, -0.01)
 
-    >>> tests on arrays
+    >>> b.val, e.val = range(1, 4), 2.0            # TODO array and broadcast, then without broadcast
+    >>> p.forward()
+    >>> p.val
+    array([1., 4., 9.])
+
+    >>> p.grad, b.grad, e.grad = 1, 0, 0
+    >>> p.backward()
+    >>> tuple(np.round(g.grad, 3) for g in (p, b, e))
+    (1, array([2., 4., 6.]), array([0.   , 2.773, 9.888]))
     """
     name = 'pow'
+    arity = 2
 
     def __init__(self, base, exp):
         super().__init__([base, exp])

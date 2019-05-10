@@ -11,7 +11,7 @@ class Logf(Gate):
 
     >>> from gates import *
     >>> x = Const(0)
-    >>> s = Sigmoid(x)
+    >>> s = Logf(x)
     >>> s.forward()
     >>> s.val
     0.5
@@ -39,10 +39,11 @@ class Logf(Gate):
     >>> x.grad = np.zeros_like(x.val)
     >>> s.forward()  # computes s.val
     >>> s.backward()  # updates x.grad
-    >>> np.allclose(gt, zip(s.val, x.grad))
+    >>> np.allclose(gt, tuple(zip(s.val, x.grad)))
     True
     """
     name = 'logf'
+    arity = 1
 
     def __init__(self, input_gate):
         super().__init__([input_gate])

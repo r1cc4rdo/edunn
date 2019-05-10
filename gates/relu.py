@@ -23,6 +23,7 @@ class Relu(Gate):
     array([0. , 0. , 0. , 0.1, 0.1])
     """
     name = 'relu'
+    arity = 1
 
     def __init__(self, input_gate):
         super().__init__([input_gate])

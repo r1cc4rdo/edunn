@@ -1,5 +1,5 @@
 from leaf import Const, Input, Weight
-from sigmoid import Sigmoid
+from logf import Logf
 from relu import Relu
 from pow import *
 from arityN import *

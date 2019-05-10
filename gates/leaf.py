@@ -22,7 +22,7 @@ class Leaf(Gate):
     >>> r = Input('radius')
     >>> e = Weight()
 
-    >>> tuple(x.name for x in (pi, r, e))
+    >>> tuple(x.type for x in (pi, r, e))
     ('const', 'input', 'weight')
 
     >>> all(map(lambda x: x is None, (r.val, r.grad, e.grad, pi.grad)))
@@ -31,6 +31,7 @@ class Leaf(Gate):
     >>> r.alias, np.round(pi.val, 2), e.val
     ('radius', 3.14, array(nan))
     """
+    arity = 0
 
     def __init__(self):
         super().__init__([])
