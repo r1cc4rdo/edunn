@@ -62,8 +62,35 @@ Paper notes
 - run all tests with discovery
 - example learning area of a circle
 - use 2to3 to upgrade to python3 https://docs.python.org/2/library/2to3.html
+- test gradients with autograd (in test, don't make it a dependency), and with numerical differentiation
+- add arity, verify during build, use in test to verify output of array same as collection of invidual gates
+
+## CUDA / Acceleration
+
+Beyond Numpy Arrays in Python
+https://matthewrocklin.com/blog/work/2018/05/27/beyond-numpy
+
+Basics of CuPy — CuPy 5.4.0 documentation
+https://docs-cupy.chainer.org/en/stable/tutorial/basic.html
+
+1.1. A ~5 minute guide to Numba — Numba 0.44.0.dev0+400.g000fbcf-py2.7-linux-x86_64.egg documentation
+https://numba.pydata.org/numba-doc/dev/user/5minguide.html
+
+## Visualize graphs
+
+python - How to represent graphs with IPython - Stack Overflow
+https://stackoverflow.com/questions/29774105/how-to-represent-graphs-with-ipython
+
+Generating Graph Visualizations with pydot and Graphviz – The Python Haven
+https://pythonhaven.wordpress.com/2009/12/09/generating_graphs_with_pydot/
+
+User Guide — graphviz 0.10.1 documentation
+https://graphviz.readthedocs.io/en/stable/manual.html
 
 ## Scratchpad
+
+docopt/docopt: Pythonic command line arguments parser, that will make you smile
+https://github.com/docopt/docopt
 
 
 """
