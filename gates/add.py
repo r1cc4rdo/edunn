@@ -1,7 +1,17 @@
 from gates.gate import Gate
 
 
-class AddGate(Gate):
+class ArityN(Gate):
+    """
+
+    """
+    arity = (2, )
+
+    def __init__(self, g0, g1, *argv):
+        super().__init__([g0, g1] + list(argv))
+
+
+class Add(ArityN):
     """
     >>> from nn.sugar import *
     >>> a, b, c = param(1, -2, 3)
@@ -17,11 +27,8 @@ class AddGate(Gate):
     name = 'add'
     arity = 0
 
-    def __init__(self, g0, *argv):
-        super(AddGate, self).__init__('+', [g0] + list(argv))
-
     def forward(self):
-        self.val = sum(gate.val for gate in self.igs)
+        self.val = np.sum(gate.val for gate in self.igs)
 
     def backward(self):
         for gate in self.igs:

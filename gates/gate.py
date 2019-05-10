@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from gates.leaf import Const
+from gates.arity0 import Const  # TODO can actually happen at network instantiation time! No need to be now!
 
 
 class Gate(ABC):
