@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from gates.leaf import Const
+
 
 class Gate(ABC):
     """
@@ -9,7 +11,7 @@ class Gate(ABC):
     """
 
     def __init__(self, input_gates):
-        self.igs = input_gates
+        self.igs = [ig if isinstance(ig, Gate) else Const(ig) for ig in input_gates]
         self.val = self.grad = None
 
     @property
