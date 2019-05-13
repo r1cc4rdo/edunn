@@ -36,7 +36,7 @@ class Pow(Gate):
     >>> b.val, b.grad
     (10.0, -0.01)
 
-    >>> b.val, e.val = range(1, 4), 2.0            # TODO array and broadcast, then without broadcast
+    >>> b.val, e.val = range(1, 4), 2.0
     >>> p.forward()
     >>> p.val
     array([1., 4., 9.])
@@ -47,7 +47,7 @@ class Pow(Gate):
     (1, array([2., 4., 6.]), array([0.   , 2.773, 9.888]))
     """
     name = 'pow'
-    arity = 2
+    arity = (2, 2)
 
     def __init__(self, base, exp):
         super().__init__([base, exp])

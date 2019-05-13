@@ -3,7 +3,7 @@ import numpy as np
 from gates.gate import Gate
 
 
-class Leaf(Gate):
+class Arity0(Gate):
     """
     Abstract superclass for all arity-0 nodes (which are leaves in the spanning tree).
     No input gates, so nothing to do in forward and backward passes.
@@ -31,7 +31,7 @@ class Leaf(Gate):
     >>> r.alias, np.round(pi.val, 2), e.val
     ('radius', 3.14, array(nan))
     """
-    arity = 0
+    arity = (0, 0)
 
     def __init__(self):
         super().__init__([])
@@ -43,7 +43,7 @@ class Leaf(Gate):
         pass
 
 
-class Const(Leaf):
+class Const(Arity0):
 
     name = 'const'
 
@@ -52,7 +52,7 @@ class Const(Leaf):
         self.val = value
 
 
-class Input(Leaf):
+class Input(Arity0):
 
     name = 'input'
 
@@ -61,7 +61,7 @@ class Input(Leaf):
         self.alias = alias
 
 
-class Weight(Leaf):
+class Weight(Arity0):
 
     name = 'weight'
 

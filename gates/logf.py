@@ -43,7 +43,7 @@ class Logf(Gate):
     True
     """
     name = 'logf'
-    arity = 1
+    arity = (1, 1)
 
     def __init__(self, input_gate):
         super().__init__([input_gate])

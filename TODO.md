@@ -64,6 +64,7 @@ Paper notes
 - use 2to3 to upgrade to python3 https://docs.python.org/2/library/2to3.html
 - test gradients with autograd (in test, don't make it a dependency), and with numerical differentiation
 - add arity, verify during build, use in test to verify output of array same as collection of invidual gates
+- test broadcast for pow (1, 1) (1, n), (n, 1), (n, n).
 
 ## CUDA / Acceleration
 

@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
 
-from gates.arity0 import Const  # TODO can actually happen at network instantiation time! No need to be now!
-
 
 class Gate(ABC):
     """
@@ -11,7 +9,7 @@ class Gate(ABC):
     """
 
     def __init__(self, input_gates):
-        self.igs = [ig if isinstance(ig, Gate) else Const(ig) for ig in input_gates]
+        self.igs = input_gates
         self.val = self.grad = None
 
     @property
@@ -19,8 +17,8 @@ class Gate(ABC):
     def name(self):
         """
         Returns a string identifier for the gate type.
-        This does not uniquely identify each gate/layer in a network.
-        :return:
+        It's a class property; it does not uniquely identify a single gate or layer in a network.
+        :return: string
         """
         pass
 
@@ -28,26 +26,33 @@ class Gate(ABC):
     @abstractmethod
     def arity(self):
         """
-
-        :return:
+        Returns a tuple containing the minimum and maximum number of inputs for the gate (the arity of the operator).
+        For example, (1, 1) means the gate takes exactly one input. (2, None) means 2+ inputs.
+        :return: (int, int)
         """
         pass
 
     @abstractmethod
     def forward(self):
         """
-
-        :return:
+        Performs the forward pass, gate.value = function(*gate.igs)
+        :return: None
         """
         pass
 
     @abstractmethod
     def backward(self):
         """
-
-        :return:
+        Perform local back-propagation.
+        For each g in gate.igs, g.grad = d/dg function(*gate.igs)
+        :return: None
         """
         pass
 
     def __str__(self):
+        """
+        Returns the gate class identifier, Gate.name.
+        Gate.name is a class property; it does not uniquely identify a single gate or layer in a network.
+        :return: string
+        """
         return self.name

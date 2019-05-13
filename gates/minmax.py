@@ -1,7 +1,7 @@
-from gates.gate import Gate
+from gates.add import Arity2Plus
 
 
-class Min(Gate):
+class Min(Arity2Plus):
     """
     >>> from nn.sugar import *
     >>> a, b, c = param(1, -2, 3)
@@ -15,10 +15,9 @@ class Min(Gate):
     (0.0, 0.1, 0.0)
     """
     name = 'min'
-    arity = 0
 
-    def __init__(self, g0, *argv):
-        super().__init__([g0] + list(argv))
+    def __init__(self, *argv):
+        super().__init__(*argv)
         self.order_fun = min
 
     def forward(self):
@@ -44,10 +43,9 @@ class Max(Min):
     (0.0, 0.0, 0.1)
     """
     name = 'max'
-    arity = 0
 
-    def __init__(self, g0, *argv):
-        super().__init__(g0, *argv)
+    def __init__(self, *argv):
+        super().__init__(*argv)
         self.order_fun = max
 
 

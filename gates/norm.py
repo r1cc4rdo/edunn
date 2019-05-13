@@ -32,3 +32,9 @@ class Norm(Gate):
     def backward(self):
         for gate in self.igs:
             gate.grad += (gate.val / self.val) * self.grad if abs(self.val) > 0.0 else self.grad
+
+
+if __name__ == '__main__':
+
+    import doctest
+    doctest.testmod(verbose=True)

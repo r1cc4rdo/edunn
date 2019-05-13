@@ -1,31 +1,38 @@
-from gates.gate import Gate
 from functools import reduce
 
+import numpy as np
 
-class MulGate(Gate):
+from gates.add import Arity2Plus
+
+
+class Mul(Arity2Plus):
     """
-    >>> from nn.sugar import *
-    >>> a, b, c = param(1, -2, 3)
-    >>> tuple(float(x.compute()) for x in (MulGate(a), a * b, prod(a, b), a * b * c, prod(a, b, c)))
-    (1.0, -2.0, -2.0, -6.0, -6.0)
+    >>> from gates import *
+    >>> a, b = (Const(x) for x in (-2, range(3)))
+    >>> aa, ab, ba, bb =  (Mul(x, y) for x in (a, b) for y in (a, b))
+    >>> tuple(v for g in (aa, ab, ba, bb) for _, v in ((g.forward(), g.val), ))
+    (4, array([ 0, -2, -4]), array([ 0, -2, -4]), array([0, 1, 4]))
 
-    >>> import numpy as np
-    >>> s = a * b * c
-    >>> _ = s.compute()
-    >>> s.backprop(grad=0.1)
-    >>> np.allclose([x.grad for x in (a, b, c)], [-0.6, 0.3, -0.2])
-    True
+    >>> ab.grad, a.grad, b.grad = 0.123, 0., np.zeros_like(b.val, np.float)
+    >>> ab.backward()
+    >>> a.grad
+    0.369
+    >>> b.grad
+    array([ 0.   , -0.246, -0.492])
     """
     name = 'mul'
-    arity = 0
-
-    def __init__(self, g0, *argv):
-        super(MulGate, self).__init__('*', [g0] + list(argv))
 
     def forward(self):
-        self.val = reduce(mul, (gate.val for gate in self.igs), 1)
+        self.val = reduce(np.multiply, (gate.val for gate in self.igs))
 
     def backward(self):
-        for index, gate in enumerate(self.igs):
-            all_other_gates = self.igs[:index] + self.igs[index + 1:]
-            gate.grad += reduce(mul, (g.val for g in all_other_gates), 1) * self.grad
+        for gate in self.igs:
+            prod_wo_gate = reduce(np.multiply, (g.val for g in self.igs if g is not gate))
+            for idx_input_grad, idx_pwg, idx_self_grad in Mul.broadcast_indexes(gate.val, prod_wo_gate):
+                gate.grad[idx_input_grad] += prod_wo_gate[idx_pwg] * self.grad[idx_self_grad]
+
+
+if __name__ == '__main__':
+
+    import doctest
+    doctest.testmod(verbose=True)
