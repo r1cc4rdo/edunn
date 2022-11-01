@@ -49,6 +49,10 @@ print 'a, b, c = {:.2f}, {:.2f}, {:.2f}'.format(a.val, b.val, c.val)
 * [James Loy (numpy)](https://towardsdatascience.com/how-to-build-your-own-neural-network-from-scratch-in-python-68998a08e4f6)
 * [Morvan Zhou](https://github.com/MorvanZhou/simple-neural-networks)
 
+## See also
+* [geohot/tinygrad](https://github.com/geohot/tinygrad)
+* [karpathy/micrograd](https://github.com/karpathy/micrograd)
+
 ## Datasets
 * [Celsius to Fahrenheit](https://www.thoughtco.com/celcius-to-farenheit-formula-609227)
 * [scikit learn datasets](https://scikit-learn.org/stable/datasets.html#datasets)
