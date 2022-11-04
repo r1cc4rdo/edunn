@@ -50,7 +50,7 @@ print 'a, b, c = {:.2f}, {:.2f}, {:.2f}'.format(a.val, b.val, c.val)
 * [Morvan Zhou](https://github.com/MorvanZhou/simple-neural-networks)
 
 ## See also
-* [geohot/tinygrad](https://github.com/geohot/tinygrad)
+* [geohot/tinygrad](https://github.com/geohot/tinygrad) and [tinygrad.org](https://tinygrad.org/)
 * [karpathy/micrograd](https://github.com/karpathy/micrograd)
 
 ## Datasets
